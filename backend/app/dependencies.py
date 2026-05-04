@@ -6,7 +6,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from app.auth import decode_access_token
 from app.db import get_database
-from app.utils import serialize_document
+from app.utils import serialize_public_user
 
 security = HTTPBearer(auto_error=True)
 
@@ -21,7 +21,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     user = await database.users.find_one({"_id": ObjectId(payload["sub"])})
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
-    return serialize_document(user)
+    return serialize_public_user(user)
 
 
 def require_admin(current_user: dict = Depends(get_current_user)) -> dict:

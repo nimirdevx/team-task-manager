@@ -19,7 +19,14 @@ async function request(path: string, options: RequestInit = {}) {
 
   if (!res.ok) {
     const err = await res.json().catch(() => ({}));
-    throw new Error(err.detail || "Request failed");
+    const d = err.detail;
+    const message =
+      typeof d === "string"
+        ? d
+        : Array.isArray(d)
+          ? d.map((x: { msg?: string }) => x.msg).filter(Boolean).join("; ")
+          : "Request failed";
+    throw new Error(message || "Request failed");
   }
 
   if (res.status === 204) return null;

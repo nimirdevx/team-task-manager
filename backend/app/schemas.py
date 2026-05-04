@@ -30,6 +30,10 @@ class AddMemberRequest(BaseModel):
     user_id: str = Field(min_length=1)
 
 
+class UserRoleUpdateRequest(BaseModel):
+    role: Literal["admin", "member"]
+
+
 class TaskCreateRequest(BaseModel):
     title: str = Field(min_length=1)
     description: str = ""

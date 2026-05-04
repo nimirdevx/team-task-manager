@@ -7,6 +7,7 @@ from app.db import close_db, connect_db
 from app.routes.auth import router as auth_router
 from app.routes.projects import router as projects_router
 from app.routes.tasks import router as tasks_router
+from app.routes.users import router as users_router
 
 
 @asynccontextmanager
@@ -29,6 +30,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(projects_router)
 app.include_router(tasks_router)
+app.include_router(users_router)
 
 
 @app.get("/")

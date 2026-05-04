@@ -54,6 +54,13 @@ Frontend runs on `http://localhost:3000`.
 
 - `NEXT_PUBLIC_API_URL` - Backend base URL (example: `http://localhost:8000`)
 
+## Roles & access control
+
+- **Sign-up:** The first user in an empty database is the initial **admin**; everyone else starts as **member**.
+- **Team & roles (UI):** Admins can list all users and **promote** members to admin or **demote** admins to member. The API refuses to remove the **last** admin (avoids lockout).
+- **Current user:** `GET /auth/me` returns the profile from MongoDB (so the UI stays correct after a role change without re-login).
+- **Admin-only operations** (also enforced server-side): create projects, add members to a project, create tasks (`require_admin` in the backend).
+
 ## Railway Deployment Notes
 
 - Backend uses `backend/Procfile` and `backend/railway.toml`.

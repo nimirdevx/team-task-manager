@@ -17,3 +17,9 @@ def serialize_document(document: dict) -> dict:
     if "_id" in result:
         result["id"] = result.pop("_id")
     return result
+
+
+def serialize_public_user(document: dict) -> dict:
+    data = serialize_document(document)
+    data.pop("hashed_password", None)
+    return data

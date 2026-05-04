@@ -1,13 +1,20 @@
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.auth import create_access_token, hash_password, verify_password
+from app.dependencies import get_current_user
 from app.db import get_database
 from app.schemas import LoginRequest, SignupRequest, TokenResponse
-from app.utils import serialize_document
+from app.utils import serialize_public_user
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+@router.get("/me")
+async def me(current_user: dict = Depends(get_current_user)):
+    """Current user profile from the database (role may differ from JWT after promotion)."""
+    return current_user
 
 
 @router.post("/signup", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
@@ -17,6 +24,7 @@ async def signup(payload: SignupRequest):
     if existing:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
 
+    # First user becomes org admin; further admins are assigned on the Team page.
     user_count = await database.users.count_documents({})
     role = "admin" if user_count == 0 else "member"
 
@@ -29,7 +37,7 @@ async def signup(payload: SignupRequest):
     }
     result = await database.users.insert_one(user_doc)
     created_user = await database.users.find_one({"_id": result.inserted_id})
-    user = serialize_document(created_user)
+    user = serialize_public_user(created_user)
     token = create_access_token({"sub": user["id"], "role": user["role"]})
     return {"access_token": token, "token_type": "bearer", "user": user}
 
@@ -41,6 +49,6 @@ async def login(payload: LoginRequest):
     if not user or not verify_password(payload.password, user["hashed_password"]):
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid email or password")
 
-    serialized = serialize_document(user)
+    serialized = serialize_public_user(user)
     token = create_access_token({"sub": serialized["id"], "role": serialized["role"]})
     return {"access_token": token, "token_type": "bearer", "user": serialized}

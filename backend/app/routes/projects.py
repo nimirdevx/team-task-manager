@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from app.db import get_database
 from app.dependencies import get_current_user, require_admin
 from app.schemas import AddMemberRequest, ProjectCreateRequest
-from app.utils import serialize_document
+from app.utils import serialize_document, serialize_public_user
 
 router = APIRouter(prefix="/projects", tags=["projects"])
 
@@ -53,7 +53,7 @@ async def get_project_detail(project_id: str, current_user: dict = Depends(get_c
     return {
         "project": serialize_document(project),
         "tasks": [serialize_document(task) for task in tasks],
-        "members": [serialize_document(member) for member in members],
+        "members": [serialize_public_user(member) for member in members],
     }
 
 

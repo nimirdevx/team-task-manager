@@ -1,13 +1,20 @@
 "use client";
 
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 
 import Navbar from "@/components/Navbar";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import { getUser } from "@/lib/auth";
+import { getUser, subscribeAuth } from "@/lib/auth";
+import { User } from "@/lib/types";
 
 export default function AppShell({ children }: { children: React.ReactNode }) {
-  const user = useMemo(() => getUser(), []);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    setUser(getUser());
+    return subscribeAuth(() => setUser(getUser()));
+  }, []);
+
   if (!user) return null;
 
   return (
