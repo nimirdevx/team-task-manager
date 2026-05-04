@@ -29,6 +29,6 @@ Next.js 14 (App Router, Tailwind) · FastAPI · MongoDB (Motor) · Deploy on **R
 
 <!-- ## Live URLs -->
 <!-- 
-- Frontend: `https://your-frontend.railway.app` 
-- API: `https://your-backend.railway.app` -->
+- Frontend: `team-task-manager-gamma-silk.vercel.app` 
+- API:'https://team-task-manager-production-928c.up.railway.app'-->
 
