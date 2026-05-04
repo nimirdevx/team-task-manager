@@ -10,11 +10,36 @@ from app.utils import serialize_public_user
 router = APIRouter(prefix="/users", tags=["users"])
 
 
+def _created_sort_key(user: dict) -> str:
+    """ISO strings from serialize_public_user sort chronologically."""
+    s = user.get("created_at")
+    if isinstance(s, str) and s:
+        return s
+    return "9999-12-31T23:59:59+00:00"
+
+
+def _dedupe_users_by_email(users: list[dict]) -> list[dict]:
+    """Keep one row per email (normalized); earliest created_at wins."""
+    best: dict[str, dict] = {}
+    for u in users:
+        email = (u.get("email") or "").strip().lower()
+        key = email or (u.get("id") or "")
+        if not key:
+            continue
+        cur = best.get(key)
+        if cur is None or _created_sort_key(u) < _created_sort_key(cur):
+            best[key] = u
+    out = list(best.values())
+    out.sort(key=_created_sort_key)
+    return out
+
+
 @router.get("")
 async def list_users(_: dict = Depends(require_admin)):
     database = get_database()
-    users = await database.users.find({}).sort("created_at", 1).to_list(length=500)
-    return [serialize_public_user(u) for u in users]
+    raw = await database.users.find({}).sort("created_at", 1).to_list(length=500)
+    serialized = [serialize_public_user(u) for u in raw]
+    return _dedupe_users_by_email(serialized)
 
 
 @router.patch("/{user_id}/role", response_model=dict)

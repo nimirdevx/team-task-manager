@@ -2,8 +2,214 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: Arial, Helvetica, sans-serif;
-  background: #f3f4f6;
+@layer base {
+  html {
+    @apply bg-cream text-oncream antialiased;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-cream font-sans text-body text-oncream;
+  }
+
+  ::selection {
+    @apply bg-primary/25 text-oncream;
+  }
+}
+
+@layer components {
+  .ui-panel {
+    @apply rounded-lg border border-hairline bg-surface-1;
+  }
+
+  .ui-input {
+    @apply w-full rounded-md border border-hairline bg-surface-1 px-3 py-2 text-body-sm text-ink placeholder:text-ink-tertiary;
+    @apply transition-colors focus:border-hairline-strong focus:outline-none focus:ring-1 focus:ring-primary-focus;
+  }
+
+  .ui-select {
+    @apply ui-input cursor-pointer appearance-none bg-no-repeat pr-8;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a8f98' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+    background-position: right 10px center;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-md bg-primary px-[14px] py-2 text-body-sm font-medium text-onprimary transition-colors;
+    @apply hover:bg-primary-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2;
+  }
+
+  .btn-primary:disabled {
+    @apply cursor-not-allowed opacity-40 hover:bg-primary;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center rounded-md border border-hairline bg-surface-1 px-[14px] py-2 text-body-sm font-medium text-ink transition-colors;
+    @apply hover:bg-surface-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2;
+  }
+
+  .btn-secondary:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+
+  .btn-tertiary {
+    @apply inline-flex items-center justify-center rounded-md bg-surface-2 px-[14px] py-2 text-body-sm font-medium text-ink transition-colors;
+    @apply hover:bg-surface-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus focus-visible:ring-offset-2 focus-visible:ring-offset-surface-2;
+  }
+
+  .btn-tertiary:disabled {
+    @apply cursor-not-allowed opacity-40;
+  }
+
+  /* Full-viewport auth / marketing (after .btn-* so overrides win) */
+  .auth-page {
+    @apply min-h-screen bg-cream text-oncream;
+  }
+
+  .auth-card {
+    @apply w-full rounded-lg border border-rail-border bg-inverse-canvas/95 px-6 py-9 shadow-sm sm:px-8 sm:py-10;
+  }
+
+  .auth-page .btn-primary {
+    @apply rounded-lg focus-visible:ring-offset-cream;
+  }
+
+  .auth-page .btn-secondary {
+    @apply rounded-lg border-rail-border bg-rail-muted/60 text-oncream shadow-none;
+    @apply hover:border-cream-border hover:bg-rail hover:text-oncream;
+    @apply focus-visible:ring-offset-cream;
+  }
+
+  .ui-page-title {
+    @apply font-display text-headline tracking-tight text-ink;
+  }
+
+  .ui-section-title {
+    @apply font-display text-card-title text-ink;
+  }
+
+  .ui-muted {
+    @apply text-body-sm text-ink-subtle;
+  }
+
+  .ui-error {
+    @apply text-body-sm text-ink-muted;
+  }
+
+  /* Sidebar (cream) — log out + focus rings sit on light surface */
+  .btn-on-cream {
+    @apply inline-flex w-full items-center justify-center rounded-md border border-oncream-muted/25 bg-cream-warm px-[14px] py-2.5 text-body-sm font-medium text-oncream transition-colors;
+    @apply hover:border-oncream-muted/40 hover:bg-black/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-focus focus-visible:ring-offset-2 focus-visible:ring-offset-cream;
+  }
+
+  .ui-input-light {
+    @apply w-full rounded-md border border-cream-border bg-inverse-canvas px-3 py-2 text-body-sm text-oncream placeholder:text-cream-muted;
+    @apply transition-colors focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary-focus;
+  }
+
+  /* Light main column (inside .app-main) — sidebar stays dark canvas */
+  .app-main {
+    @apply text-oncream;
+  }
+
+  .app-main .ui-page-title,
+  .app-main .ui-section-title {
+    @apply text-oncream;
+  }
+
+  .app-main .ui-muted {
+    @apply text-oncream-muted;
+  }
+
+  .app-main .ui-error {
+    @apply text-oncream-muted;
+  }
+
+  .app-main .text-ink {
+    @apply text-oncream;
+  }
+
+  .app-main .text-ink-muted {
+    @apply text-oncream-muted;
+  }
+
+  .app-main .text-ink-subtle {
+    @apply text-oncream-subtle;
+  }
+
+  .app-main .text-ink-tertiary {
+    @apply text-cream-muted;
+  }
+
+  .app-main .ui-panel {
+    @apply border-cream-border bg-inverse-canvas;
+  }
+
+  .app-main a.ui-panel:hover {
+    @apply border-oncream-muted/35 bg-cream-warm;
+  }
+
+  .app-main .btn-primary {
+    @apply focus-visible:ring-offset-cream;
+  }
+
+  .app-main .btn-secondary {
+    @apply border-cream-border bg-inverse-canvas text-oncream shadow-sm;
+    @apply hover:border-oncream-muted/35 hover:bg-cream-warm;
+    @apply focus-visible:ring-offset-cream;
+  }
+
+  .app-main .btn-tertiary {
+    @apply border border-transparent bg-cream-warm text-oncream;
+    @apply hover:bg-cream-border/50;
+    @apply focus-visible:ring-offset-cream;
+  }
+
+  .app-main .ui-input,
+  .app-main .ui-select {
+    @apply border-cream-border bg-inverse-canvas text-oncream placeholder:text-cream-muted;
+    @apply focus:border-primary focus:ring-primary-focus;
+  }
+
+  .app-main .ui-select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b6560' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E");
+  }
+
+  .app-main .border-hairline {
+    @apply border-cream-border;
+  }
+
+  .app-main .border-hairline-strong {
+    @apply border-oncream-muted/30;
+  }
+
+  .app-main .bg-surface-1 {
+    @apply bg-inverse-canvas;
+  }
+
+  .app-main .bg-surface-2 {
+    @apply bg-cream-warm;
+  }
+
+  .app-main .bg-surface-3 {
+    @apply bg-cream-border/50;
+  }
+
+  .app-main table thead tr {
+    @apply border-cream-border bg-cream-warm;
+  }
+
+  .app-main table tbody tr {
+    @apply border-cream-border;
+  }
+
+  .app-main .empty-state {
+    @apply border-oncream-muted/35 bg-inverse-canvas shadow-none;
+  }
+
+  .app-main .empty-state-icon {
+    @apply border-cream-border bg-cream-warm text-cream-muted;
+  }
+
+  .app-main option {
+    @apply bg-inverse-canvas text-oncream;
+  }
 }

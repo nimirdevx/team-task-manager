@@ -1,75 +1,34 @@
 # Team Task Manager
 
-A full-stack team task management web app with JWT authentication, role-based access, project collaboration, and task tracking dashboards.
+Full-stack app: JWT auth, MongoDB, projects with members, tasks (assign, status, due dates), and a dashboard. **First signup is admin**; admins manage team roles and project membership.
 
-## Tech Stack
+## What it does
 
-- Frontend: Next.js 14 (App Router), Tailwind CSS
-- Backend: FastAPI (Python)
-- Database: MongoDB with Motor (async)
-- Auth: JWT (`python-jose`) + password hashing (`passlib`)
-- Deployment: Railway
+- Sign up / log in · JWT session
+- **Admin:** create projects, add members by user ID, create tasks, open **Team & roles** to promote/demote (last admin protected)
+- **Member:** view projects they belong to, see and update assigned tasks
+- Dashboard: counts for your tasks (including overdue)
 
-## Project Structure
+## Stack
 
-- `frontend` - Next.js application
-- `backend` - FastAPI application
+Next.js 14 (App Router, Tailwind) · FastAPI · MongoDB (Motor) · Deploy on **Railway** (see below)
 
-## Local Setup
+## Run locally
 
-### 1) Backend setup
+**Backend** (`cd backend`): `python3 -m venv .venv` → activate → `pip install -r requirements.txt` → `cp .env.example .env` → fill Mongo + JWT → `python3 -m uvicorn main:app --reload` → [http://localhost:8000](http://localhost:8000)
 
-```bash
-cd backend
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env
-uvicorn main:app --reload
-```
+**Frontend** (`cd frontend`): `npm install` → `cp .env.local.example .env.local` → set `NEXT_PUBLIC_API_URL` → `npm run dev` → [http://localhost:3000](http://localhost:3000)
 
-Backend runs on `http://localhost:8000`.
+## Env
 
-### 2) Frontend setup
+| Location | Variables |
+|----------|-----------|
+| `backend/.env` | `MONGODB_URL`, `DATABASE_NAME`, `JWT_SECRET`, `JWT_EXPIRE_MINUTES` |
+| `frontend/.env.local` | `NEXT_PUBLIC_API_URL` (backend origin, no trailing slash) |
 
-```bash
-cd frontend
-npm install
-cp .env.local.example .env.local
-npm run dev
-```
 
-Frontend runs on `http://localhost:3000`.
+<!-- ## Live URLs -->
+<!-- 
+- Frontend: `https://your-frontend.railway.app` 
+- API: `https://your-backend.railway.app` -->
 
-## Environment Variables
-
-### Backend (`backend/.env`)
-
-- `MONGODB_URL` - Mongo connection string (example: `mongodb://localhost:27017`)
-- `DATABASE_NAME` - Mongo database name (example: `taskmanager`)
-- `JWT_SECRET` - Secret key used to sign JWT access tokens
-- `JWT_EXPIRE_MINUTES` - Token expiration in minutes (example: `1440`)
-
-### Frontend (`frontend/.env.local`)
-
-- `NEXT_PUBLIC_API_URL` - Backend base URL (example: `http://localhost:8000`)
-
-## Roles & access control
-
-- **Sign-up:** The first user in an empty database is the initial **admin**; everyone else starts as **member**.
-- **Team & roles (UI):** Admins can list all users and **promote** members to admin or **demote** admins to member. The API refuses to remove the **last** admin (avoids lockout).
-- **Current user:** `GET /auth/me` returns the profile from MongoDB (so the UI stays correct after a role change without re-login).
-- **Admin-only operations** (also enforced server-side): create projects, add members to a project, create tasks (`require_admin` in the backend).
-
-## Railway Deployment Notes
-
-- Backend uses `backend/Procfile` and `backend/railway.toml`.
-- Frontend uses `next.config.js` with `output: "standalone"` and `frontend/railway.toml`.
-- Create two Railway services from the same repo:
-  - Service 1 root directory: `backend`
-  - Service 2 root directory: `frontend`
-
-## Live URL
-
-- Frontend: `https://your-frontend-url.railway.app`
-- Backend: `https://your-backend-url.railway.app`

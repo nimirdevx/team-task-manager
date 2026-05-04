@@ -18,6 +18,12 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     setChecking(false);
   }, [router]);
 
-  if (checking) return <div className="p-8">Checking authentication...</div>;
+  if (checking) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-cream px-6">
+        <p className="text-body-sm text-oncream-subtle">Checking session…</p>
+      </div>
+    );
+  }
   return <>{children}</>;
 }

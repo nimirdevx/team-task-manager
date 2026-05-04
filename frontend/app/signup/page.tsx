@@ -34,43 +34,52 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 px-4">
-      <form onSubmit={submit} className="w-full max-w-md rounded-lg bg-white p-6 shadow">
-        <h1 className="mb-4 text-2xl font-bold">Sign Up</h1>
-        {error && <p className="mb-3 text-sm text-red-600">{error}</p>}
-        <input
-          type="text"
-          placeholder="Name"
-          className="mb-3 w-full rounded border px-3 py-2"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          className="mb-3 w-full rounded border px-3 py-2"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="mb-4 w-full rounded border px-3 py-2"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-          minLength={6}
-        />
-        <button className="w-full rounded bg-blue-600 px-3 py-2 font-semibold text-white hover:bg-blue-700">Create account</button>
-        <p className="mt-4 text-sm">
+    <div className="auth-page flex items-center justify-center px-4 py-10 sm:px-6">
+      <div className="auth-card max-w-[400px]">
+        <p className="font-mono text-caption font-medium uppercase tracking-[0.4px] text-cream-muted">Alpha</p>
+        <h1 className="mt-2 font-display text-2xl font-semibold tracking-tight text-oncream md:text-[28px]">Create account</h1>
+        <p className="mt-2 text-body-sm text-oncream-muted">Team Task Manager</p>
+        {error && <p className="mt-6 rounded-md border border-red-200/80 bg-red-50/90 px-3 py-2 text-body-sm text-red-800">{error}</p>}
+        <form onSubmit={submit} className="mt-8 space-y-4">
+          <input
+            type="text"
+            placeholder="Name"
+            className="ui-input-light"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            className="ui-input-light"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            className="ui-input-light"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            minLength={6}
+          />
+          <button type="submit" className="btn-primary mt-2 w-full">
+            Continue
+          </button>
+        </form>
+        <p className="mt-8 text-center text-body-sm text-oncream-muted">
           Already have an account?{" "}
-          <Link className="text-blue-600" href="/login">
-            Login
+          <Link
+            className="font-medium text-oncream underline decoration-rail-border underline-offset-4 transition-colors hover:text-primary"
+            href="/login"
+          >
+            Sign in
           </Link>
         </p>
-      </form>
+      </div>
     </div>
   );
 }

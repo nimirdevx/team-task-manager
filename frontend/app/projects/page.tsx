@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import AppShell from "@/components/AppShell";
+import EmptyState from "@/components/EmptyState";
 import Modal from "@/components/Modal";
 import ProjectCard from "@/components/ProjectCard";
 import RoleGuard from "@/components/RoleGuard";
@@ -45,38 +46,63 @@ export default function ProjectsPage() {
 
   return (
     <AppShell>
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Projects</h1>
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="font-mono text-caption uppercase tracking-[0.4px] text-ink-subtle">Workspace</p>
+          <h1 className="ui-page-title mt-1">Projects</h1>
+        </div>
         <RoleGuard role={user?.role} allowed={["admin"]}>
-          <button onClick={() => setShowCreate(true)} className="rounded bg-blue-600 px-4 py-2 text-white">
-            Create Project
+          <button type="button" onClick={() => setShowCreate(true)} className="btn-primary">
+            Create project
           </button>
         </RoleGuard>
       </div>
-      {error && <p className="mb-4 text-red-600">{error}</p>}
-      <div className="grid gap-4 md:grid-cols-2">
-        {projects.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
-      </div>
+      {error && <p className="ui-error mb-6">{error}</p>}
+      {projects.length === 0 ? (
+        <div className="mt-4">
+          <EmptyState
+            label="Projects"
+            title="No projects yet"
+            description={
+              user?.role === "admin"
+                ? "Create a project to organize tasks and invite teammates by user ID from the sidebar."
+                : "Ask an admin to add you to a project. You will see it here once you are a member."
+            }
+          >
+            <RoleGuard role={user?.role} allowed={["admin"]}>
+              <button type="button" onClick={() => setShowCreate(true)} className="btn-primary">
+                Create project
+              </button>
+            </RoleGuard>
+          </EmptyState>
+        </div>
+      ) : (
+        <div className="grid gap-4 md:grid-cols-2">
+          {projects.map((project) => (
+            <ProjectCard key={project.id} project={project} />
+          ))}
+        </div>
+      )}
 
       {showCreate && (
-        <Modal title="Create Project" onClose={() => setShowCreate(false)}>
-          <form onSubmit={createProject} className="space-y-3">
+        <Modal title="Create project" onClose={() => setShowCreate(false)}>
+          <form onSubmit={createProject} className="space-y-4">
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full rounded border px-3 py-2"
+              className="ui-input"
               placeholder="Project name"
             />
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full rounded border px-3 py-2"
-              placeholder="Project description"
+              className="ui-input min-h-[88px] resize-y"
+              placeholder="Description"
             />
-            <button className="rounded bg-blue-600 px-4 py-2 text-white">Create</button>
+            <button type="submit" className="btn-primary w-full sm:w-auto">
+              Create
+            </button>
           </form>
         </Modal>
       )}
